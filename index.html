@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Eneagrama</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Teste de Eneagrama</h1>
+            <p class="subtitle">Descubra seu tipo de personalidade</p>
+        </header>
+
+        <div class="intro" id="intro-section">
+            <p>O Eneagrama é um sistema que descreve nove tipos de personalidade distintos e suas interrelações. Este teste ajudará você a identificar seu tipo predominante.</p>
+            <p>Avalie as afirmações de acordo com o quanto você concorda ou discorda delas, considerando seus comportamentos e atitudes habituais.</p>
+            
+            <div class="instructions">
+                <h3>Instruções:</h3>
+                <ul>
+                    <li>O teste contém 30 afirmações</li>
+                    <li>Para cada afirmação, selecione uma das opções:</li>
+                </ul>
+                <div class="options-legend">
+                    <div class="option-item">
+                        <span class="option-circle option-4"></span>
+                        <span>Concordo</span>
+                    </div>
+                    <div class="option-item">
+                        <span class="option-circle option-3"></span>
+                        <span>Concordo Parcialmente</span>
+                    </div>
+                    <div class="option-item">
+                        <span class="option-circle option-2"></span>
+                        <span>Discordo Parcialmente</span>
+                    </div>
+                    <div class="option-item">
+                        <span class="option-circle option-1"></span>
+                        <span>Discordo</span>
+                    </div>
+                </div>
+                <p>Seja honesto(a) em suas respostas para obter um resultado mais preciso.</p>
+            </div>
+            
+            <button id="start-test" class="btn">Iniciar Teste</button>
+        </div>
+
+        <form id="test-form" style="display: none;">
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress" id="progress-bar"></div>
+                </div>
+                <div class="progress-text">
+                    <span id="current-question">1</span> de <span id="total-questions">30</span>
+                </div>
+            </div>
+
+            <div id="questions-container">
+                <!-- As questões serão inseridas aqui via JavaScript -->
+            </div>
+
+            <div class="navigation-buttons">
+                <button type="button" id="prev-btn" class="btn btn-secondary" disabled>Anterior</button>
+                <button type="button" id="next-btn" class="btn">Próxima</button>
+                <button type="submit" id="submit-btn" class="btn btn-primary" style="display: none;">Ver Resultado</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

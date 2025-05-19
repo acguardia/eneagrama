@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultado do Teste de Eneagrama</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .result-container {
+            margin-top: 2rem;
+        }
+        
+        .result-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .primary-type {
+            background-color: #f1f8ff;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            border-left: 5px solid #3498db;
+        }
+        
+        .primary-type h2 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+        
+        .type-description {
+            line-height: 1.8;
+        }
+        
+        .secondary-types {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 2rem;
+        }
+        
+        .type-card {
+            flex: 1;
+            min-width: 250px;
+            padding: 1.5rem;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .type-card h3 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .type-score {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .score-bar {
+            height: 10px;
+            background-color: #ecf0f1;
+            border-radius: 5px;
+            overflow: hidden;
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+        
+        .score-fill {
+            height: 100%;
+            background-color: #3498db;
+        }
+        
+        .score-percentage {
+            font-weight: bold;
+            color: #7f8c8d;
+        }
+        
+        .all-types {
+            margin-top: 3rem;
+        }
+        
+        .all-types h3 {
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+            text-align: center;
+        }
+        
+        .types-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .restart-btn {
+            display: block;
+            width: 200px;
+            margin: 3rem auto;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .secondary-types {
+                flex-direction: column;
+            }
+            
+            .type-card {
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Resultado do Teste de Eneagrama</h1>
+            <p class="subtitle">Seu perfil de personalidade</p>
+        </header>
+
+        <div id="result-container" class="result-container">
+            <div class="result-header">
+                <h2>Carregando resultado...</h2>
+                <p>Por favor, aguarde enquanto processamos seu resultado.</p>
+            </div>
+        </div>
+
+        <a href="index.html" class="btn restart-btn">Refazer o Teste</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Recuperar resultado do localStorage
+            const resultData = JSON.parse(localStorage.getItem('eneagramResult'));
+            
+            if (!resultData) {
+                // Se não houver resultado, redirecionar para a página inicial
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Descrições dos tipos do Eneagrama
+            const eneagramTypes = {
+                1: {
+                    name: "Tipo 1 - O Perfeccionista",
+                    description: "Pessoas do tipo 1 são éticas, dedicadas e confiáveis. Elas têm um forte senso de certo e errado e são professores naturais. Elas se esforçam para melhorar o mundo, para evitar erros e para serem corretas em tudo o que fazem. Sua atenção está frequentemente voltada para detalhes e para a busca da perfeição. Quando estão em equilíbrio, são sábias, discernentes, realistas e nobres, com profundo senso de propósito. Quando estão estressadas, podem se tornar críticas, perfeccionistas e inflexíveis."
+                },
+                2: {
+                    name: "Tipo 2 - O Prestativo",
+                    description: "Pessoas do tipo 2 são prestativas, atenciosas e interpessoais. Elas são movidas pelo desejo de serem amadas e necessárias, e expressam seus sentimentos positivos para os outros. Elas se sentem compelidas a ajudar os outros e costumam ser generosas com seu tempo e energia. São empáticas, sinceras e calorosas, sempre atentas às necessidades alheias. Quando estão em equilíbrio, são altruístas e amorosas de forma incondicional. Quando estão estressadas, podem se tornar possessivas e manipuladoras, usando a generosidade para controlar os outros."
+                },
+                3: {
+                    name: "Tipo 3 - O Realizador",
+                    description: "Pessoas do tipo 3 são seguras, ambiciosas e energéticas. Elas se preocupam com sua imagem e com o que os outros pensam delas. Elas são orientadas para o sucesso e se adaptam para se destacar. São frequentemente exemplos de sucesso em nossa cultura. Eficientes, autoconfiantes e competentes, sabem como se apresentar bem e inspirar os outros. Quando estão em equilíbrio, são autênticas e excelentes modelos a seguir. Quando estão estressadas, podem se tornar excessivamente preocupadas com status e aparências."
+                },
+                4: {
+                    name: "Tipo 4 - O Individualista",
+                    description: "Pessoas do tipo 4 são sensíveis, introspectivas e expressivas. Elas são autênticas, pessoais e sinceras, mas também podem ser temperamentais e autocentradas. Elas são movidas pela necessidade de se sentirem únicas e de encontrar significado em suas vidas. Criativas e inspiradoras, têm uma profunda conexão com suas emoções e uma apreciação pela beleza e autenticidade. Quando estão em equilíbrio, são inspiradoras e profundamente criativas. Quando estão estressadas, podem se tornar melancólicas e se afundar em sentimentos de inadequação."
+                },
+                5: {
+                    name: "Tipo 5 - O Investigador",
+                    description: "Pessoas do tipo 5 são perceptivas, inovadoras e isoladas. Elas são capazes de concentração e foco intensos em desenvolver ideias complexas e habilidades. Independentes e analíticas, elas podem se tornar preocupadas com seus pensamentos. Valorizam o conhecimento, a competência e a autodependência. Quando estão em equilíbrio, são visionárias e pioneiras em seu campo. Quando estão estressadas, podem se tornar destacadas e excessivamente isoladas do mundo ao seu redor."
+                },
+                6: {
+                    name: "Tipo 6 - O Leal",
+                    description: "Pessoas do tipo 6 são comprometidas, orientadas para a segurança e engajadas. Elas são confiáveis, trabalhadoras e responsáveis, mas também podem ser defensivas e ansiosas. Elas se preocupam com segurança e com o que pode dar errado. São leais, comprometidas e buscam estabilidade. Quando estão em equilíbrio, são corajosas, cooperativas e grandes solucionadoras de problemas. Quando estão estressadas, podem se tornar excessivamente cautelosas e indecisas, ou reativas e rebeldes."
+                },
+                7: {
+                    name: "Tipo 7 - O Entusiasta",
+                    description: "Pessoas do tipo 7 são ocupadas, divertidas e espontâneas. Elas são versáteis, otimistas e produtivas, mas podem se dispersar e ser impulsivas. Elas buscam experiências positivas e estimulantes e são capazes de planejar atividades agradáveis. Extrovertidas e enérgicas, trazem entusiasmo para tudo o que fazem. Quando estão em equilíbrio, são alegres e gratas, focando sua energia em objetivos valiosos. Quando estão estressadas, podem se tornar dispersas e escapistas, evitando desconforto a todo custo."
+                },
+                8: {
+                    name: "Tipo 8 - O Desafiador",
+                    description: "Pessoas do tipo 8 são poderosas, dominantes e confiantes. Elas se protegem e protegem os outros. Elas são decisivas e assertivas, mas também podem ser confrontadoras e intimidadoras. Elas têm uma forte necessidade de controlar seu ambiente. São protetoras, fortes e diretas em suas abordagens. Quando estão em equilíbrio, são magnânimas e usam seu poder para melhorar a vida dos outros. Quando estão estressadas, podem se tornar controladoras e agressivas."
+                },
+                9: {
+                    name: "Tipo 9 - O Pacificador",
+                    description: "Pessoas do tipo 9 são receptivas, tranquilas e complacentes. Elas são confiáveis, de bom temperamento e agradáveis, mas também podem ser muito teimosas, embora de forma passiva. Elas buscam paz e harmonia, evitando conflitos. São boas mediadoras e sabem ver todos os lados de uma questão. Quando estão em equilíbrio, são atentas e inclusivas, criando harmonia genuína. Quando estão estressadas, podem se tornar passivas e desconectadas, evitando problemas em vez de enfrentá-los."
+                }
+            };
+            
+            // Elemento para exibir o resultado
+            const resultContainer = document.getElementById('result-container');
+            
+            // Obter o tipo primário e os tipos secundários
+            const primaryType = resultData.primaryType;
+            const allTypes = resultData.allTypes;
+            
+            // Construir o HTML do resultado
+            let resultHTML = `
+                <div class="result-header">
+                    <h2>Seu tipo predominante é:</h2>
+                </div>
+                
+                <div class="primary-type">
+                    <h2>${eneagramTypes[primaryType].name}</h2>
+                    <div class="type-score">
+                        <div class="score-bar">
+                            <div class="score-fill" style="width: ${allTypes[0].percentage}%"></div>
+                        </div>
+                        <span class="score-percentage">${allTypes[0].percentage}%</span>
+                    </div>
+                    <p class="type-description">${eneagramTypes[primaryType].description}</p>
+                </div>
+                
+                <h3>Seus tipos secundários:</h3>
+                <div class="secondary-types">
+            `;
+            
+            // Adicionar os tipos secundários (posições 1 e 2 do array allTypes)
+            for (let i = 1; i < allTypes.length; i++) {
+                const type = allTypes[i].type;
+                resultHTML += `
+                    <div class="type-card">
+                        <h3>${eneagramTypes[type].name}</h3>
+                        <div class="type-score">
+                            <div class="score-bar">
+                                <div class="score-fill" style="width: ${allTypes[i].percentage}%"></div>
+                            </div>
+                            <span class="score-percentage">${allTypes[i].percentage}%</span>
+                        </div>
+                        <p>${eneagramTypes[type].description.split('.')[0]}.</p>
+                    </div>
+                `;
+            }
+            
+            resultHTML += `
+                </div>
+                
+                <div class="all-types">
+                    <h3>Todos os tipos do Eneagrama</h3>
+                    <div class="types-grid">
+            `;
+            
+            // Adicionar todos os tipos
+            for (let i = 1; i <= 9; i++) {
+                resultHTML += `
+                    <div class="type-card">
+                        <h3>${eneagramTypes[i].name}</h3>
+                        <p>${eneagramTypes[i].description.split('.')[0]}.</p>
+                    </div>
+                `;
+            }
+            
+            resultHTML += `
+                    </div>
+                </div>
+            `;
+            
+            // Atualizar o conteúdo
+            resultContainer.innerHTML = resultHTML;
+        });
+    </script>
+</body>
+</html>
