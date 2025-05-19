@@ -165,6 +165,12 @@ document.addEventListener('DOMContentLoaded', function() {
     testForm.addEventListener('submit', function(e) {
         e.preventDefault();
         
+        // Salvar a resposta da última questão se estiver selecionada
+        const lastQuestionOption = document.querySelector(`input[name="q${currentQuestion}"]:checked`);
+        if (lastQuestionOption) {
+            answers[currentQuestion] = parseInt(lastQuestionOption.value);
+        }
+        
         // Verificar se todas as questões foram respondidas
         const unanswered = answers.findIndex(answer => answer === null);
         
